@@ -10,9 +10,22 @@
 		263802D92D03C7EC0011D3AC /* Photostreams.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Photostreams.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		263802ED2D04F4490011D3AC /* Exceptions for "Photostreams" folder in "Photostreams" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 263802D82D03C7EC0011D3AC /* Photostreams */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		263802DB2D03C7EC0011D3AC /* Photostreams */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				263802ED2D04F4490011D3AC /* Exceptions for "Photostreams" folder in "Photostreams" target */,
+			);
 			path = Photostreams;
 			sourceTree = "<group>";
 		};
@@ -255,6 +268,9 @@
 				DEVELOPMENT_TEAM = C439SXF5QX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Photostreams/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app is trying to open your camera to take new photos.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs access to your photos to display and manage your photo streams. Your photos are fully private to you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -284,6 +300,9 @@
 				DEVELOPMENT_TEAM = C439SXF5QX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Photostreams/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app is trying to open your camera to take new photos.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs access to your photos to display and manage your photo streams. Your photos are fully private to you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
