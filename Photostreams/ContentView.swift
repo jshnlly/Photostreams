@@ -7,134 +7,106 @@
 
 import SwiftUI
 import SwiftData
+import Photos
 
 struct Photo: Identifiable {
-    let id: UUID
+    let id = UUID()
     let image: UIImage
-    let profileImage: UIImage
-    var isUserPhoto: Bool
 }
 
 struct ContentView: View {
-    @State private var selectedPhoto: Photo?
-    @Namespace private var animation
-    
-    // Grid layout configuration
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 3)
-    
-    // Add sample data
-    private let samplePhotos: [Photo] = (1...12).map { _ in
-        Photo(
-            id: UUID(),
-            image: UIImage(named: "placeholder") ?? UIImage(),
-            profileImage: UIImage(named: "profile-placeholder") ?? UIImage(),
-            isUserPhoto: Bool.random()
-        )
-    }
+    @State private var isAuthorized = false
+    private let gridItemSize: CGFloat = (UIScreen.main.bounds.width - 32)/3  // Explicit calculation including total padding
+    private let columns = [
+        GridItem(.fixed(UIScreen.main.bounds.width/3 - 12)),
+        GridItem(.fixed(UIScreen.main.bounds.width/3 - 12)),
+        GridItem(.fixed(UIScreen.main.bounds.width/3 - 12))
+    ]
     
     var body: some View {
         ZStack {
-            VStack {
-                HStack {
-                    Text("Photostreams")
-                        .font(.title)
-                        .fontWeight(.bold)
-                    
-                    Spacer()
-                }
-                .padding()
-                
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 8) {
-                        ForEach(samplePhotos) { photo in
-                            if selectedPhoto?.id != photo.id {
-                                ZStack(alignment: .topLeading) {
-                                    // Main image
-                                    Image(uiImage: photo.image)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(minWidth: 0, maxWidth: .infinity)
-                                        .aspectRatio(1, contentMode: .fit)
-                                        .clipped()
-                                        .background(Color.gray.opacity(0.3))
-                                        .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 32, style: .continuous)
-                                                .stroke(Color.black.opacity(0.05), lineWidth: 0.5)
-                                        )
-                                        .matchedGeometryEffect(id: photo.id, in: animation)
-                                        .onTapGesture {
-                                            withAnimation(.spring(response: 0.45, dampingFraction: 0.9, blendDuration: 0)) {
-                                                selectedPhoto = photo
-                                            }
-                                        }
-                                        .zIndex(0)
-                                    
-                                    // Profile image
-                                    Image(uiImage: photo.profileImage)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 24, height: 24)
-                                        .clipShape(Circle())
-                                        .padding(12)
-                                }
-                            } else {
-                                Color.clear
-                                    .frame(minWidth: 0, maxWidth: .infinity)
-                                    .aspectRatio(1, contentMode: .fit)
-                            }
-                        }
-                    }
-                    .padding(8)
-                }
-            }
+            // Background blur
+            Image("placeholder")
+                .resizable()
+                .scaledToFill()
+                .frame(width: UIScreen.main.bounds.width * 2)
+                .blur(radius: 30)
+                .brightness(-0.1)
+                .ignoresSafeArea()
             
-            // Expanded image overlay
-            if let photo = selectedPhoto {
-                Rectangle()
-                    .fill(.ultraThinMaterial)
-                    .ignoresSafeArea()
-                    .transition(.opacity)
-                    .zIndex(1)
-                
-                VStack(spacing: 0) {
-                    HStack {
-                        Button(action: {
-                            withAnimation(.spring(response: 0.45, dampingFraction: 0.9, blendDuration: 0)) {
-                                selectedPhoto = nil
-                            }
-                        }) {
-                            Image(systemName: "arrow.left")
-                                .font(.title2)
-                                .foregroundColor(.white)
-                                .padding()
-                        }
-                        Spacer()
-                    }
-                    
-                    Image(uiImage: photo.image)
+            TabView {
+                // First page - Single photo view
+                VStack(alignment: .leading) {
+                    Spacer().frame(height: 60)
+                    Image("placeholder")
                         .resizable()
                         .scaledToFill()
                         .frame(
-                            width: selectedPhoto?.id == photo.id ? UIScreen.main.bounds.width - 24 : UIScreen.main.bounds.width/3 - 16,
-                            height: selectedPhoto?.id == photo.id ? UIScreen.main.bounds.height - 320 : UIScreen.main.bounds.width/3 - 16
+                            width: UIScreen.main.bounds.width - 32,
+                            height: UIScreen.main.bounds.height - 240
                         )
-                        .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
+                        .clipShape(RoundedRectangle(cornerRadius: 48, style: .continuous))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 32, style: .continuous)
-                                .stroke(Color.black.opacity(0.05), lineWidth: 0.5)
+                            RoundedRectangle(cornerRadius: 48, style: .continuous)
+                                .stroke(.white, lineWidth: 0.5)
                         )
-                        .clipped()
-                        .matchedGeometryEffect(id: photo.id, in: animation)
-                        .padding()
-                    
                     Spacer()
                 }
-                .zIndex(2)
+                
+                // Second page - Grid view
+                VStack(alignment: .leading) {
+                    Spacer().frame(height: 60)
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 8) {
+                            ForEach(0..<12, id: \.self) { index in
+                                Image("placeholder")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: gridItemSize, height: gridItemSize)
+                                    .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+                            }
+                        }
+                        .padding(.horizontal, 8)
+                    }
+                }
+            }
+            .tabViewStyle(.page)
+            .indexViewStyle(.page(backgroundDisplayMode: .never))
+
+            VStack {
+                Text("12 new photos today")
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 8)
+                    .opacity(0.5)
+                Spacer()
+            }
+            .padding(16)
+        }
+        .onAppear {
+            requestPhotoLibraryAccess()
+        }
+    }
+    
+    private func requestPhotoLibraryAccess() {
+        PHPhotoLibrary.requestAuthorization { status in
+            DispatchQueue.main.async {
+                switch status {
+                case .authorized, .limited:
+                    self.isAuthorized = true
+                case .denied, .restricted:
+                    self.isAuthorized = false
+                case .notDetermined:
+                    // This case should not occur after requesting
+                    break
+                @unknown default:
+                    break
+                }
             }
         }
     }
 }
+
 #Preview {
     ContentView()
 }
