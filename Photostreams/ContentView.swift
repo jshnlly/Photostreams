@@ -33,7 +33,7 @@ struct ContentView: View {
     let timer = Timer.publish(every: 0.25, on: .main, in: .common).autoconnect()
     
     #if DEBUG
-    private let debugNoPhotos = true  // Set this to true to simulate no photos
+    private let debugNoPhotos = false  // Set this to true to simulate no photos
     #endif
     
     var body: some View {
