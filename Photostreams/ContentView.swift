@@ -158,6 +158,13 @@ struct ContentView: View {
                         }
                         .padding(.top, 60)
                     }
+                    .refreshable {
+                        if showingYesterday {
+                            fetchYesterdaysPhotos()
+                        } else {
+                            fetchTodaysPhotos()
+                        }
+                    }
                     .tag(1)
                 }
             }
